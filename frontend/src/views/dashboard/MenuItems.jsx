@@ -72,7 +72,7 @@ function MenuItems({ sidebarOpen, setSidebarOpen }) {
                 <div className="lg:hidden absolute top-4 right-4 z-10">
                     <button
                         onClick={() => setSidebarOpen(false)}
-                        className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                        className="cursor-pointer p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
                     >
                         <X className="w-4 h-4 text-gray-600" />
                     </button>

@@ -31,7 +31,7 @@ function Header({ setSidebarOpen }) {
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                     <button
-                        className="p-2 hover:bg-gray-100 rounded-xl transition-colors lg:hidden"
+                        className="cursor-pointer p-2 hover:bg-gray-100 rounded-xl transition-colors lg:hidden"
                         onClick={() => setSidebarOpen(true)}
                     >
                         <Menu className="w-5 h-5 text-gray-600" />
@@ -84,7 +84,7 @@ function Header({ setSidebarOpen }) {
                     <button
                         type="submit"
                         onClick={onLogout}
-                        className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-xl font-medium text-sm transition-all duration-200 hover:scale-105"
+                        className="cursor-pointer flex items-center space-x-2 px-4 py-2 text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-xl font-medium text-sm transition-all duration-200 hover:scale-105"
                     >
                         <LogOut className="w-4 h-4" />
                         <span className="hidden sm:inline">Logout</span>
