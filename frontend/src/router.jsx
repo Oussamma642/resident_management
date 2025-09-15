@@ -8,6 +8,7 @@ import Dashboard from "./views/dashboard/Dashboard";
 import CreateImmeuble from "./views/immeubles/CreateImmeuble";
 import Owners from "./views/owners/Owners";
 import CreateOwner from "./views/owners/CreateOwner";
+import UpdateOwner from "./views/owners/UpdateOwner";
 
 // const {user}=  useStateContext();
 
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
               {
                 path: "owners/create",
                 element: <CreateOwner/>
+              },
+              {
+                path: "owners/:id/edit",
+                element: <UpdateOwner/>
               }
             ],
           },

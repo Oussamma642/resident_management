@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\ImmeubleController;
 use App\Http\Controllers\ProprietaireController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(ProprietaireController::class)->group(function () {
         Route::get('/proprietaires', 'index');
         Route::post('/proprietaires', 'store');
+    });
+
+    // User Controller
+    Route::controller(UserController::class)->group(function () {
+        Route::middleware('is_syndic')->group(function () {
+            // using controller-style string
+            Route::delete('/users/{id}', 'destroy');
+        });
     });
 
     // Logout route
