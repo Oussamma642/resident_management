@@ -113,8 +113,16 @@ class ProprietaireController extends Controller
      */
     public function show(string $id)
     {
-        $proprietaire = Proprietaire::findOrFail($id);
+        $proprietaire = DB::selectOne(
+            '
+                select u.*, p.* from users u
+                inner join proprietaires p on p.user_id = u.id
+                where u.id = ?
+            ',
+            [$id]
+        );
         return response()->json($proprietaire);
+
     }
 
     /**

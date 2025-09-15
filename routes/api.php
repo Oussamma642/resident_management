@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Proprietaire APIs
     Route::controller(ProprietaireController::class)->group(function () {
         Route::get('/proprietaires', 'index');
+        Route::get(('/proprietaires/{id}'), 'show');
         Route::post('/proprietaires', 'store');
     });
 
