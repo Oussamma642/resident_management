@@ -39,7 +39,7 @@ function Owners() {
             setLoading(true);
             const { data } = await axiosClient.get('/proprietaires');
             setOwners(data);
-            console.log(data);
+            
         } catch (err) {
             console.log(err);
         } finally {

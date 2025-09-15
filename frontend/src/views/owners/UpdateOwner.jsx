@@ -32,10 +32,10 @@ export default function UpdateOwner() {
     useEffect(() => {
         // Fetch existing owner data here if needed
         // Example:
-        console.log("ID: ", id);
+
         axiosClient.get(`/proprietaires/${id}`)
             .then(({ data }) => {
-                console.log(data);
+    
                 setForm({
                     name: data.name || "",
                     email: data.email || "",

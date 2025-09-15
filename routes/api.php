@@ -35,6 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/proprietaires', 'index');
         Route::get(('/proprietaires/{id}'), 'show');
         Route::post('/proprietaires', 'store');
+        Route::put('/proprietaires/{id}', 'update');
     });
 
     // User Controller
