@@ -21,7 +21,6 @@ import {
 
 function Owners() {
 
-    const navigate = useNavigate();
     const [owners, setOwners] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -39,7 +38,6 @@ function Owners() {
             setLoading(true);
             const { data } = await axiosClient.get('/proprietaires');
             setOwners(data);
-            
         } catch (err) {
             console.log(err);
         } finally {
@@ -253,7 +251,7 @@ function Owners() {
                                 <th className="px-6 py-4 text-left">
                                     <button
                                         onClick={() => handleSort('name')}
-                                        className="flex items-center space-x-2 font-semibold text-gray-900 hover:text-indigo-600 transition-colors"
+                                        className="cursor-pointer flex items-center space-x-2 font-semibold text-gray-900 hover:text-indigo-600 transition-colors"
                                     >
                                         <span>Owner</span>
                                         {sortBy === 'name' && (
@@ -267,7 +265,7 @@ function Owners() {
                                 <th className="px-6 py-4 text-left">
                                     <button
                                         onClick={() => handleSort('etage')}
-                                        className="flex items-center space-x-2 font-semibold text-gray-900 hover:text-indigo-600 transition-colors"
+                                        className="cursor-pointer flex items-center space-x-2 font-semibold text-gray-900 hover:text-indigo-600 transition-colors"
                                     >
                                         <span>Location</span>
                                         {sortBy === 'etage' && (
@@ -280,7 +278,7 @@ function Owners() {
                                 <th className="px-6 py-4 text-left">
                                     <button
                                         onClick={() => handleSort('created_at')}
-                                        className="flex items-center space-x-2 font-semibold text-gray-900 hover:text-indigo-600 transition-colors"
+                                        className="cursor-pointer flex items-center space-x-2 font-semibold text-gray-900 hover:text-indigo-600 transition-colors"
                                     >
                                         <span>Joined</span>
                                         {sortBy === 'created_at' && (

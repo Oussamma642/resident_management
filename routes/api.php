@@ -33,17 +33,14 @@ Route::middleware('auth:sanctum')->group(function () {
     // Proprietaire APIs
     Route::controller(ProprietaireController::class)->group(function () {
         Route::get('/proprietaires', 'index');
-        Route::get(('/proprietaires/{id}'), 'show');
+        Route::get('/proprietaires/{id}', 'show');
         Route::post('/proprietaires', 'store');
         Route::put('/proprietaires/{id}', 'update');
     });
 
     // User Controller
     Route::controller(UserController::class)->group(function () {
-        Route::middleware('is_syndic')->group(function () {
-            // using controller-style string
-            Route::delete('/users/{id}', 'destroy');
-        });
+        Route::delete('/users/{id}', [UserController::class, 'destroy'])->middleware('is_syndic');
     });
 
     // Logout route

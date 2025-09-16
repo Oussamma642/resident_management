@@ -1,7 +1,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import axiosClient from "../../axios-client";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 
 
 const PASSWORD_STRENGTH = (pwd) => {
@@ -19,7 +19,12 @@ export default function UpdateOwner() {
 
     const { id } = useParams();
 
+    const navigate = useNavigate();
+
     const [form, setForm] = useState({
+        id: "",
+        user_id: "",
+        immeuble_id: "",
         name: "",
         email: "",
         password: "",
@@ -35,14 +40,18 @@ export default function UpdateOwner() {
 
         axiosClient.get(`/proprietaires/${id}`)
             .then(({ data }) => {
-    
+
+                console.log("Fetched owner data:", data);
+
                 setForm({
+                    id: data.id || "",
+                    user_id: data.user_id || "",
+                    immeuble_id: data.immeuble_id || "",
                     name: data.name || "",
                     email: data.email || "",
                     password: "", // Passwords are not fetched for security reasons
                     phone: data.phone || "",
                     etage: data.etage !== undefined ? String(data.etage) : "",
-
                     numeroAppartement: data.numero_appartement || "",
                 });
             })
@@ -66,8 +75,7 @@ export default function UpdateOwner() {
         if (!form.name.trim()) next.name = "Le nom est requis.";
         if (!form.email.trim()) next.email = "L'email est requis.";
         else if (!/^\S+@\S+\.\S+$/.test(form.email)) next.email = "Format d'email invalide.";
-        if (!form.password) next.password = "Le mot de passe est requis.";
-        else if (form.password.length < 8) next.password = "Le mot de passe doit contenir au moins 8 caractères.";
+        if (form.password && form.password.length > 0 && form.password.length < 8) next.password = "Le mot de passe est requis.";
         if (!form.phone.trim()) next.phone = "Le numéro de téléphone est requis.";
         else if (!/^[0-9+\s()-]{6,20}$/.test(form.phone)) next.phone = "Format de téléphone invalide.";
         if (form.etage === "") next.etage = "L'étage est requis.";
@@ -108,6 +116,7 @@ export default function UpdateOwner() {
     };
 
     const handleSubmit = async (e) => {
+        
         e.preventDefault();
         setSuccessMessage("");
         const clientErrors = validate();
@@ -119,27 +128,30 @@ export default function UpdateOwner() {
         setIsSubmitting(true);
         setErrors({});
 
+        console.log("Submitting form data:", form);
+
         try {
             const payload = {
+                id: parseInt(form.id),
+                user_id: parseInt(form.user_id),
+                immeuble_id: parseInt(form.immeuble_id),
                 name: form.name.trim(),
                 email: form.email.trim(),
-                password: form.password,
                 phone: form.phone.trim(),
                 etage: parseInt(form.etage, 10),
-                numero_appartement: form.numeroAppartement.trim(),
+                numero_appartement: parseInt(form.numeroAppartement),
             };
 
-            const { data } = await axiosClient.post("/proprietaires", payload);
+            if (form.password && form.password.length > 0) payload.password = form.password;
 
-            setForm({
-                name: "",
-                email: "",
-                password: "",
-                phone: "",
-                etage: "",
-                numeroAppartement: "",
-            });
-            setSuccessMessage("Propriétaire ajouté avec succès !");
+            const { data } = await axiosClient.put(`/proprietaires/${id}`, payload);
+
+            setSuccessMessage("Propriétaire modifié avec succès !");
+            setTimeout(() => {
+                navigate("/dashboard/owners"); // or your target path
+            }, 500);
+
+
         } catch (error) {
             const resp = error?.response;
             if (resp?.status === 422) {
@@ -161,6 +173,8 @@ export default function UpdateOwner() {
         } finally {
             setIsSubmitting(false);
         }
+
+
     };
 
     const getFieldError = (fieldName) => {
@@ -176,7 +190,7 @@ export default function UpdateOwner() {
                 aria-labelledby="create-owner-title"
             >
                 <h2 id="create-owner-title" className="text-2xl font-semibold text-gray-800 mb-4">
-                    Ajouter un propriétaire
+                    Modifier un propriétaire
                 </h2>
 
                 {errors.general && (
@@ -260,7 +274,7 @@ export default function UpdateOwner() {
                                 className={`block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 ${getFieldError("password") ? "border-red-300 focus:ring-red-200" : "border-gray-200 focus:ring-blue-100"
                                     }`}
                                 disabled={isSubmitting}
-                                required
+                            // required
                             />
                             <button
                                 type="button"
