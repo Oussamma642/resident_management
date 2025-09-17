@@ -36,11 +36,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/proprietaires/{id}', 'show');
         Route::post('/proprietaires', 'store');
         Route::put('/proprietaires/{id}', 'update');
+        Route::delete('/proprietaires/{id}', 'destroy')->middleware('is_syndic');
     });
 
     // User Controller
     Route::controller(UserController::class)->group(function () {
-        Route::delete('/users/{id}', [UserController::class, 'destroy'])->middleware('is_syndic');
+        // Route::delete('/users/{id}', [UserController::class, 'destroy'])->middleware('is_syndic');
     });
 
     // Logout route

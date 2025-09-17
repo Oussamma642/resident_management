@@ -284,7 +284,9 @@ class ProprietaireController extends Controller
     public function destroy(string $id)
     {
         $proprietaire = Proprietaire::findOrFail($id);
+        $user = User::findOrFail($proprietaire->user_id);
         $proprietaire->delete();
+        $user->delete(); // This will also delete the proprietaire due to foreign key constraint
         return response()->json(null, 204);
     }
 }

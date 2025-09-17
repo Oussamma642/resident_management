@@ -160,7 +160,7 @@ function MenuItems({ sidebarOpen, setSidebarOpen }) {
                 <NavLink
                     to="/dashboard/profile"
                     className={({ isActive }) =>
-                        `absolute bottom-0 left-0 right-0 p-4 border-t border-gray-100 bg-gradient-to-t from-gray-50 to-transparent ${isActive ? 'bg-gradient-to-t from-indigo-50 to-transparent' : ''
+                        `absolute bottom-0 left-0 right-0 p-4 px-1 border-t border-gray-100 bg-gradient-to-t from-gray-50 to-transparent ${isActive ? 'bg-gradient-to-t from-indigo-50 to-transparent' : ''
                         }`
                     }
                 >

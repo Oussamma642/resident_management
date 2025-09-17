@@ -98,8 +98,8 @@ function Owners() {
         }
         try {
             // Delete Propietaire
-            await axiosClient.delete(`/users/${id}`);
-            setOwners(owners.filter(owner => owner.user_id !== id));
+            await axiosClient.delete(`/proprietaires/${id}`);
+            setOwners(owners.filter(owner => owner.id !== id));
         } catch (err) {
             console.error(err);
         }
@@ -338,7 +338,7 @@ function Owners() {
                                             <NavLink to={`/dashboard/owners/${owner.user_id}/edit`} className="cursor-pointer p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
                                                 <Edit className="w-4 h-4" />
                                             </NavLink>
-                                            <button onClick={() => deleteOwner(owner.user_id)} className="cursor-pointer p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all">
+                                            <button onClick={() => deleteOwner(owner.id)} className="cursor-pointer p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all">
                                                 <Trash2 className="w-4 h-4" />
                                             </button>
                                         </div>
