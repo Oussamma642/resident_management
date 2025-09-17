@@ -26,8 +26,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Immeuble APIs
     Route::controller(ImmeubleController::class)->group(function () {
-        Route::get('/immeubles', 'index');
-        Route::post('/immeubles', 'store');
+
+        Route::middleware('is_syndic')->group(function () {
+            Route::get('/immeubles', 'index');
+            Route::get('/immeubles/auth-syndic', 'getImmeubleOfAuthSyndic');
+            Route::post('/immeubles', 'store');
+        });
     });
 
     // Proprietaire APIs
@@ -40,9 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/proprietaires', 'store');
             Route::put('/proprietaires/{id}', 'update');
             Route::delete('/proprietaires/{id}', 'destroy');
-
         });
-
     });
 
     // User Controller

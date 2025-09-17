@@ -14,19 +14,33 @@ class ImmeubleController extends Controller
      */
 
 
-public function index()
-{
-    $user = Auth::user();
-    $syndicId = $user->syndic->id;
+    public function index()
+    {
+        $user = Auth::user();
+        $syndicId = $user->syndic->id;
 
-    $immeuble = Immeuble::where('syndic_id', $syndicId)->first();
+        $immeuble = Immeuble::where('syndic_id', $syndicId)->first();
 
-    if ($immeuble) {
-        return response()->json([$immeuble]);
-    } else {
-        return response()->json([]);
+        if ($immeuble) {
+            return response()->json([$immeuble]);
+        } else {
+            return response()->json([]);
+        }
     }
-}
+
+    public function getImmeubleOfAuthSyndic()
+    {
+        $user = Auth::user();
+        $syndicId = $user->syndic->id;
+
+        $immeuble = Immeuble::where('syndic_id', $syndicId)->get();
+
+        if ($immeuble) {
+            return response()->json($immeuble);
+        } else {
+            return response()->json(['message' => 'Immeuble non trouvé'], 404);
+        }
+    }
 
     /**
      * Enregistre un nouvel immeuble.
@@ -37,8 +51,8 @@ public function index()
             'name' => 'required|string',
             'address' => 'required|string',
         ]);
-        
-        $user=Auth::user();
+
+        $user = Auth::user();
         $syndicId = $user->syndic->id;
 
         $validated['syndic_id'] = $syndicId;
@@ -80,6 +94,4 @@ public function index()
             'message' => 'Immeuble supprimé avec succès',
         ]);
     }
-
-
 }

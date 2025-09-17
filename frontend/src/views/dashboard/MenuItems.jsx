@@ -11,7 +11,8 @@ import {
     Home,
     Users,
     X,
-    User
+    User,
+    Building
 } from "lucide-react";
 
 function MenuItems({ sidebarOpen, setSidebarOpen }) {
@@ -28,19 +29,27 @@ function MenuItems({ sidebarOpen, setSidebarOpen }) {
             badge: null,
         },
         {
+            icon: Building,
+            label: "Immeuble",
+            hasDropdown: false,
+            to: "/dashboard/immeuble/edit",
+            badge: null
+        },
+        {
             icon: Users,
             label: "Owners",
             to: "/dashboard/owners",
             hasDropdown: false,
             badge: "12",
         },
-        {
-            icon: HelpCircle,
-            label: "Guide",
-            to: "/guide",
-            hasDropdown: false,
-            badge: null,
-        }
+
+        // {
+        //     icon: HelpCircle,
+        //     label: "Guide",
+        //     to: "/guide",
+        //     hasDropdown: false,
+        //     badge: null,
+        // }
     ];
 
     const toggleDropdown = (key) => {
@@ -91,7 +100,7 @@ function MenuItems({ sidebarOpen, setSidebarOpen }) {
                 </div>
 
                 {/* Navigation */}
-                <nav className="p-4 space-y-2">
+            <nav className="p-4 space-y-2">
                     {sidebarItems.map((item) => {
                         const Icon = item.icon;
 
@@ -151,7 +160,7 @@ function MenuItems({ sidebarOpen, setSidebarOpen }) {
                             </NavLink>
                         );
                     })}
-                </nav>
+            </nav>
 
                 {/* Bottom section */}
                 <NavLink

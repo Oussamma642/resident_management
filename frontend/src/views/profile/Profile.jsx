@@ -1,7 +1,7 @@
 
 import { useState, useMemo, useEffect, use } from "react";
 import axiosClient from "../../axios-client";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useStateContext } from "../../contexts/ContextProvider";
 
 
@@ -84,66 +84,6 @@ export default function Profile() {
             setErrors((prev) => ({ ...prev, [name]: "" }));
         }
     };
-
-    /*
-        const handleSubmit = async (e) => {
-
-            e.preventDefault();
-            setSuccessMessage("");
-            const clientErrors = validate();
-            if (Object.keys(clientErrors).length) {
-                setErrors(clientErrors);
-                return;
-            }
-
-            setIsSubmitting(true);
-            setErrors({});
-
-            console.log("Submitting form data:", form);
-
-
-            try {
-                const payload = {
-                    name: form.name.trim(),
-                    email: form.email.trim(),
-                    password:"",
-                    phone: form.phone.trim(),
-                };
-
-                if (form.password && form.password.length > 0) payload.password = form.password;
-
-                const { data } = await axiosClient.put(`/users/${user.id}`, payload);
-
-                setSuccessMessage("Utilisateur modifié avec succès !");
-                setTimeout(() => {
-                    navigate("/dashboard"); // or your target path
-                }, 500);
-
-
-            } catch (error) {
-                const resp = error?.response;
-                if (resp?.status === 422) {
-                    const validationErrors = resp.data.errors || {};
-                    // Map backend keys to local keys where necessary
-                    const mapped = {};
-                    Object.keys(validationErrors).forEach((k) => {
-                        mapped[k] = validationErrors[k][0] || validationErrors[k];
-                    });
-                    setErrors(mapped);
-                } else if (resp?.status === 404) {
-                    setErrors({ general: "Syndicat non trouvé. Veuillez contacter l'administrateur." });
-                } else if (resp?.data?.error) {
-                    setErrors({ general: resp.data.error });
-                } else {
-                    setErrors({ general: "Une erreur est survenue. Veuillez réessayer." });
-                }
-            } finally {
-                setIsSubmitting(false);
-            }
-
-
-        };
-    */
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -230,7 +170,7 @@ export default function Profile() {
                 aria-labelledby="create-owner-title"
             >
                 <h2 id="create-owner-title" className="text-2xl font-semibold text-gray-800 mb-4">
-                    Modifier un propriétaire
+                    Modifier le profil
                 </h2>
 
                 {errors.general && (
@@ -409,7 +349,7 @@ export default function Profile() {
                         )}
                     </button>
                     <NavLink
-                        to="/dashboard/owners/"
+                        to="/dashboard/"
                         className={"mt-4 w-full inline-flex justify-center items-center gap-2 px-4 py-2 rounded-md text-white font-medium bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-200"}
                     >
                         <span>Retourner</span>

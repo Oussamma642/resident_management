@@ -193,170 +193,194 @@ function Owners() {
                 </div>
             </div>
 
-            {/* Filters and Search */}
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
-                <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-                    <div className="flex-1 relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                        <input
-                            type="text"
-                            placeholder="Search owners by name, email, or phone..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                        />
-                    </div>
+        {/* Filters and Search - Mobile Responsive */}
+<div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-4 sm:p-6">
+    <div className="flex flex-col gap-4">
+        {/* Search Bar */}
+        <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+                type="text"
+                placeholder="Search owners by name, email, or phone..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+            />
+        </div>
 
-                    <div className="flex items-center space-x-4">
-                        <div className="flex items-center space-x-2">
-                            <Filter className="w-5 h-5 text-gray-400" />
-                            <select
-                                value={filterByFloor}
-                                onChange={(e) => setFilterByFloor(e.target.value)}
-                                className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-                            >
-                                <option value="">All Floors</option>
-                                {getUniqueFloors().map(floor => (
-                                    <option key={floor} value={floor}>Floor {floor}</option>
-                                ))}
-                            </select>
-                        </div>
+        {/* Filters Row */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+            <div className="flex items-center space-x-2 flex-1 sm:flex-initial">
+                <Filter className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                <select
+                    value={filterByFloor}
+                    onChange={(e) => setFilterByFloor(e.target.value)}
+                    className="flex-1 sm:flex-initial px-3 sm:px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all min-w-0"
+                >
+                    <option value="">All Floors</option>
+                    {getUniqueFloors().map(floor => (
+                        <option key={floor} value={floor}>Floor {floor}</option>
+                    ))}
+                </select>
+            </div>
 
-                        <select
-                            value={`${sortBy}-${sortOrder}`}
-                            onChange={(e) => {
-                                const [field, order] = e.target.value.split('-');
-                                setSortBy(field);
-                                setSortOrder(order);
-                            }}
-                            className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+            <select
+                value={`${sortBy}-${sortOrder}`}
+                onChange={(e) => {
+                    const [field, order] = e.target.value.split('-');
+                    setSortBy(field);
+                    setSortOrder(order);
+                }}
+                className="px-3 sm:px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+            >
+                <option value="name-asc">Name A-Z</option>
+                <option value="name-desc">Name Z-A</option>
+                <option value="created_at-desc">Newest First</option>
+                <option value="created_at-asc">Oldest First</option>
+                <option value="etage-asc">Floor (Low to High)</option>
+                <option value="etage-desc">Floor (High to Low)</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+{/* Owners Table - Mobile Responsive */}
+<div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+    <div className="overflow-x-auto">
+        <table className="w-full min-w-[640px]">
+            <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+                <tr>
+                    <th className="px-3 sm:px-6 py-4 text-left">
+                        <button
+                            onClick={() => handleSort('name')}
+                            className="cursor-pointer flex items-center space-x-1 sm:space-x-2 font-semibold text-gray-900 hover:text-indigo-600 transition-colors text-sm sm:text-base"
                         >
-                            <option value="name-asc">Name A-Z</option>
-                            <option value="name-desc">Name Z-A</option>
-                            <option value="created_at-desc">Newest First</option>
-                            <option value="created_at-asc">Oldest First</option>
-                            <option value="etage-asc">Floor (Low to High)</option>
-                            <option value="etage-desc">Floor (High to Low)</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+                            <span>Owner</span>
+                            {sortBy === 'name' && (
+                                <div className={`transform transition-transform ${sortOrder === 'desc' ? 'rotate-180' : ''}`}>
+                                    ↑
+                                </div>
+                            )}
+                        </button>
+                    </th>
+                    <th className="px-3 sm:px-6 py-4 text-left font-semibold text-gray-900 text-sm sm:text-base hidden sm:table-cell">Contact</th>
+                    <th className="px-3 sm:px-6 py-4 text-left">
+                        <button
+                            onClick={() => handleSort('etage')}
+                            className="cursor-pointer flex items-center space-x-1 sm:space-x-2 font-semibold text-gray-900 hover:text-indigo-600 transition-colors text-sm sm:text-base"
+                        >
+                            <span>Location</span>
+                            {sortBy === 'etage' && (
+                                <div className={`transform transition-transform ${sortOrder === 'desc' ? 'rotate-180' : ''}`}>
+                                    ↑
+                                </div>
+                            )}
+                        </button>
+                    </th>
+                    <th className="px-3 sm:px-6 py-4 text-left hidden md:table-cell">
+                        <button
+                            onClick={() => handleSort('created_at')}
+                            className="cursor-pointer flex items-center space-x-1 sm:space-x-2 font-semibold text-gray-900 hover:text-indigo-600 transition-colors text-sm sm:text-base"
+                        >
+                            <span>Joined</span>
+                            {sortBy === 'created_at' && (
+                                <div className={`transform transition-transform ${sortOrder === 'desc' ? 'rotate-180' : ''}`}>
+                                    ↑
+                                </div>
+                            )}
+                        </button>
+                    </th>
+                    <th className="px-3 sm:px-6 py-4 text-right font-semibold text-gray-900 text-sm sm:text-base">Actions</th>
+                </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+                {filteredAndSortedOwners.map((owner) => (
+                    <tr key={owner.id} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-3 sm:px-6 py-4">
+                            <div className="flex items-center space-x-2 sm:space-x-3">
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <span className="text-white font-semibold text-xs sm:text-sm">
+                                        {owner.name.charAt(0).toUpperCase()}
+                                    </span>
+                                </div>
+                                <div className="min-w-0">
+                                    <p className="font-semibold text-gray-900 text-sm sm:text-base truncate">{owner.name}</p>
+                                    <p className="text-xs sm:text-sm text-gray-500">ID: {owner.id}</p>
+                                    {/* Show contact info on mobile when Contact column is hidden */}
+                                    <div className="sm:hidden mt-1 space-y-1">
+                                        <div className="flex items-center space-x-1">
+                                            <Mail className="w-3 h-3 text-gray-400 flex-shrink-0" />
+                                            <span className="text-xs text-gray-600 truncate">{owner.email}</span>
+                                        </div>
+                                        <div className="flex items-center space-x-1">
+                                            <Phone className="w-3 h-3 text-gray-400 flex-shrink-0" />
+                                            <span className="text-xs text-gray-600">{owner.phone}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 hidden sm:table-cell">
+                            <div className="space-y-1">
+                                <div className="flex items-center space-x-2">
+                                    <Mail className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                    <span className="text-sm text-gray-900 truncate">{owner.email}</span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Phone className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                    <span className="text-sm text-gray-600">{owner.phone}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td className="px-3 sm:px-6 py-4">
+                            <div className="flex items-center space-x-1 sm:space-x-2">
+                                <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
+                                <span className="text-xs sm:text-sm text-gray-600">
+                                    Floor {owner.etage}, Apt {owner.numero_appartement}
+                                </span>
+                            </div>
+                            {/* Show joined date on mobile when Joined column is hidden */}
+                            <div className="md:hidden mt-1 flex items-center space-x-1">
+                                <Calendar className="w-3 h-3 text-gray-400 flex-shrink-0" />
+                                <span className="text-xs text-gray-500">{formatDate(owner.created_at)}</span>
+                            </div>
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 hidden md:table-cell">
+                            <div className="flex items-center space-x-2">
+                                <Calendar className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                <span className="text-sm text-gray-600">{formatDate(owner.created_at)}</span>
+                            </div>
+                        </td>
+                        <td className="px-3 sm:px-6 py-4">
+                            <div className="flex items-center justify-end space-x-1 sm:space-x-2">
+                                <NavLink
+                                    to={`/dashboard/owners/${owner.user_id}/edit`}
+                                    className="cursor-pointer p-1.5 sm:p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                                >
+                                    <Edit className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                </NavLink>
+                                <button
+                                    onClick={() => deleteOwner(owner.id)}
+                                    className="cursor-pointer p-1.5 sm:p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                                >
+                                    <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    </div>
 
-            {/* Owners Table */}
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
-                            <tr>
-                                <th className="px-6 py-4 text-left">
-                                    <button
-                                        onClick={() => handleSort('name')}
-                                        className="cursor-pointer flex items-center space-x-2 font-semibold text-gray-900 hover:text-indigo-600 transition-colors"
-                                    >
-                                        <span>Owner</span>
-                                        {sortBy === 'name' && (
-                                            <div className={`transform transition-transform ${sortOrder === 'desc' ? 'rotate-180' : ''}`}>
-                                                ↑
-                                            </div>
-                                        )}
-                                    </button>
-                                </th>
-                                <th className="px-6 py-4 text-left font-semibold text-gray-900">Contact</th>
-                                <th className="px-6 py-4 text-left">
-                                    <button
-                                        onClick={() => handleSort('etage')}
-                                        className="cursor-pointer flex items-center space-x-2 font-semibold text-gray-900 hover:text-indigo-600 transition-colors"
-                                    >
-                                        <span>Location</span>
-                                        {sortBy === 'etage' && (
-                                            <div className={`transform transition-transform ${sortOrder === 'desc' ? 'rotate-180' : ''}`}>
-                                                ↑
-                                            </div>
-                                        )}
-                                    </button>
-                                </th>
-                                <th className="px-6 py-4 text-left">
-                                    <button
-                                        onClick={() => handleSort('created_at')}
-                                        className="cursor-pointer flex items-center space-x-2 font-semibold text-gray-900 hover:text-indigo-600 transition-colors"
-                                    >
-                                        <span>Joined</span>
-                                        {sortBy === 'created_at' && (
-                                            <div className={`transform transition-transform ${sortOrder === 'desc' ? 'rotate-180' : ''}`}>
-                                                ↑
-                                            </div>
-                                        )}
-                                    </button>
-                                </th>
-                                <th className="px-6 py-4 text-right font-semibold text-gray-900">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-100">
-                            {filteredAndSortedOwners.map((owner) => (
-                                <tr key={owner.id} className="hover:bg-gray-50 transition-colors">
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center space-x-3">
-                                            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-full flex items-center justify-center">
-                                                <span className="text-white font-semibold text-sm">
-                                                    {owner.name.charAt(0).toUpperCase()}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <p className="font-semibold text-gray-900">{owner.name}</p>
-                                                <p className="text-sm text-gray-500">ID: {owner.id}</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <div className="space-y-1">
-                                            <div className="flex items-center space-x-2">
-                                                <Mail className="w-4 h-4 text-gray-400" />
-                                                <span className="text-sm text-gray-900">{owner.email}</span>
-                                            </div>
-                                            <div className="flex items-center space-x-2">
-                                                <Phone className="w-4 h-4 text-gray-400" />
-                                                <span className="text-sm text-gray-600">{owner.phone}</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <div className="space-y-1">
-                                            <div className="flex items-center space-x-2">
-                                                <MapPin className="w-4 h-4 text-gray-400" />
-                                                <span className="text-sm text-gray-600">Floor {owner.etage}, Apt {owner.numero_appartement}</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center space-x-2">
-                                            <Calendar className="w-4 h-4 text-gray-400" />
-                                            <span className="text-sm text-gray-600">{formatDate(owner.created_at)}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center justify-end space-x-2">
-                                            <NavLink to={`/dashboard/owners/${owner.user_id}/edit`} className="cursor-pointer p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
-                                                <Edit className="w-4 h-4" />
-                                            </NavLink>
-                                            <button onClick={() => deleteOwner(owner.id)} className="cursor-pointer p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all">
-                                                <Trash2 className="w-4 h-4" />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-
-                {filteredAndSortedOwners.length === 0 && (
-                    <div className="text-center py-12">
-                        <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                        <p className="text-gray-500 text-lg font-medium">No owners found</p>
-                        <p className="text-gray-400">Try adjusting your search or filters</p>
-                    </div>
-                )}
-            </div>
+    {filteredAndSortedOwners.length === 0 && (
+        <div className="text-center py-8 sm:py-12 px-4">
+            <Users className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-500 text-base sm:text-lg font-medium">No owners found</p>
+            <p className="text-gray-400 text-sm sm:text-base">Try adjusting your search or filters</p>
+        </div>
+    )}
+</div>
         </div>
     );
 }
