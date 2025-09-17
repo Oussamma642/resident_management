@@ -32,16 +32,24 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Proprietaire APIs
     Route::controller(ProprietaireController::class)->group(function () {
-        Route::get('/proprietaires', 'index');
-        Route::get('/proprietaires/{id}', 'show');
-        Route::post('/proprietaires', 'store');
-        Route::put('/proprietaires/{id}', 'update');
-        Route::delete('/proprietaires/{id}', 'destroy')->middleware('is_syndic');
+
+        Route::middleware('is_syndic')->group(function () {
+
+            Route::get('/proprietaires', 'index');
+            Route::get('/proprietaires/{id}', 'show');
+            Route::post('/proprietaires', 'store');
+            Route::put('/proprietaires/{id}', 'update');
+            Route::delete('/proprietaires/{id}', 'destroy');
+
+        });
+
     });
 
     // User Controller
     Route::controller(UserController::class)->group(function () {
-        // Route::delete('/users/{id}', [UserController::class, 'destroy'])->middleware('is_syndic');
+        Route::get('/users/{id}', 'show');
+        Route::put('/users/{id}', 'update');
+        // Route::delete('/users/{id}', 'destroy')->middleware('is_syndic');
     });
 
     // Logout route

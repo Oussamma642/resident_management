@@ -108,7 +108,6 @@ class ProprietaireController extends Controller
         }
     }
 
-    // tester b syndic akher
 
     /**
      * Display the specified resource.

@@ -1,5 +1,5 @@
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, use } from "react";
 import axiosClient from "../../axios-client";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useStateContext } from "../../contexts/ContextProvider";
@@ -26,8 +26,6 @@ export default function Profile() {
         email: "",
         password: "",
         phone: "",
-        immeuble_name:"",
-        address: ""
     });
 
     const { user } = useStateContext();
@@ -35,13 +33,21 @@ export default function Profile() {
 
     // Load owner to update
     useEffect(() => {
-        // Fetch existing owner data here if needed
-        // Example:
-        
+        axiosClient.get(`/users/${user.id}`).then(({ data }) => {
+            setForm({
+                id: data.id,
+                name: data.name,
+                email: data.email,
+                password: "", // keep password empty for update
+                phone: data.syndic.phone,
+            });
 
-        }
+        }).catch((err) => {
+            console.error("Error fetching owner data:", err);
+        });
+    }
         ,
-    []
+        [user]
     );
 
     const [errors, setErrors] = useState({});
@@ -59,18 +65,6 @@ export default function Profile() {
         if (form.password && form.password.length > 0 && form.password.length < 8) next.password = "Le mot de passe est requis.";
         if (!form.phone.trim()) next.phone = "Le numéro de téléphone est requis.";
         else if (!/^[0-9+\s()-]{6,20}$/.test(form.phone)) next.phone = "Format de téléphone invalide.";
-        if (form.etage === "") next.etage = "L'étage est requis.";
-        else if (!/^\d+$/.test(String(form.etage))) next.etage = "L'étage doit être un nombre entier.";
-        // if (!form.numeroAppartement.trim()) next.numeroAppartement = "Le numéro d'appartement est requis.";
-
-        if (
-            form.numeroAppartement === undefined ||
-            form.numeroAppartement === null ||
-            (typeof form.numeroAppartement === "string" && form.numeroAppartement.trim() === "")
-        ) {
-            next.numeroAppartement = "Le numéro d'appartement est requis.";
-        }
-
 
         return next;
     };
@@ -83,23 +77,78 @@ export default function Profile() {
         if (name === "phone") {
             const normalized = value.replace(/[^\d+\s()-]/g, "");
             setForm((f) => ({ ...f, [name]: normalized }));
-        } else if (name === "etage") {
-            // prevent non-numeric input for etage
-            const numeric = value === "" ? "" : value.replace(/[^\d-]/g, "");
-            setForm((f) => ({ ...f, [name]: numeric }));
         } else {
             setForm((f) => ({ ...f, [name]: value }));
         }
-
         if (errors[name]) {
             setErrors((prev) => ({ ...prev, [name]: "" }));
         }
     };
 
-    const handleSubmit = async (e) => {
+    /*
+        const handleSubmit = async (e) => {
 
+            e.preventDefault();
+            setSuccessMessage("");
+            const clientErrors = validate();
+            if (Object.keys(clientErrors).length) {
+                setErrors(clientErrors);
+                return;
+            }
+
+            setIsSubmitting(true);
+            setErrors({});
+
+            console.log("Submitting form data:", form);
+
+
+            try {
+                const payload = {
+                    name: form.name.trim(),
+                    email: form.email.trim(),
+                    password:"",
+                    phone: form.phone.trim(),
+                };
+
+                if (form.password && form.password.length > 0) payload.password = form.password;
+
+                const { data } = await axiosClient.put(`/users/${user.id}`, payload);
+
+                setSuccessMessage("Utilisateur modifié avec succès !");
+                setTimeout(() => {
+                    navigate("/dashboard"); // or your target path
+                }, 500);
+
+
+            } catch (error) {
+                const resp = error?.response;
+                if (resp?.status === 422) {
+                    const validationErrors = resp.data.errors || {};
+                    // Map backend keys to local keys where necessary
+                    const mapped = {};
+                    Object.keys(validationErrors).forEach((k) => {
+                        mapped[k] = validationErrors[k][0] || validationErrors[k];
+                    });
+                    setErrors(mapped);
+                } else if (resp?.status === 404) {
+                    setErrors({ general: "Syndicat non trouvé. Veuillez contacter l'administrateur." });
+                } else if (resp?.data?.error) {
+                    setErrors({ general: resp.data.error });
+                } else {
+                    setErrors({ general: "Une erreur est survenue. Veuillez réessayer." });
+                }
+            } finally {
+                setIsSubmitting(false);
+            }
+
+
+        };
+    */
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setSuccessMessage("");
+
         const clientErrors = validate();
         if (Object.keys(clientErrors).length) {
             setErrors(clientErrors);
@@ -109,53 +158,63 @@ export default function Profile() {
         setIsSubmitting(true);
         setErrors({});
 
-        console.log("Submitting form data:", form);
-
         try {
+            // Build payload more cleanly
             const payload = {
-                id: parseInt(form.id),
-                user_id: parseInt(form.user_id),
-                immeuble_id: parseInt(form.immeuble_id),
                 name: form.name.trim(),
                 email: form.email.trim(),
                 phone: form.phone.trim(),
-                etage: parseInt(form.etage, 10),
-                numero_appartement: parseInt(form.numeroAppartement),
             };
 
-            if (form.password && form.password.length > 0) payload.password = form.password;
+            // Only include password if it's actually provided
+            if (form.password?.trim()) {
+                payload.password = form.password.trim();
+            }
 
-            const { data } = await axiosClient.put(`/proprietaires/${id}`, payload);
+            console.log("Submitting form data:", payload);
 
-            setSuccessMessage("Propriétaire modifié avec succès !");
+            const { data } = await axiosClient.put(`/users/${user.id}`, payload);
+
+            setSuccessMessage(data.message || "Utilisateur modifié avec succès !");
+
+            // Give users more time to see the success message
             setTimeout(() => {
-                navigate("/dashboard/owners"); // or your target path
-            }, 500);
-
+                navigate("/dashboard");
+            }, 1500);
 
         } catch (error) {
-            const resp = error?.response;
-            if (resp?.status === 422) {
-                const validationErrors = resp.data.errors || {};
-                // Map backend keys to local keys where necessary
-                const mapped = {};
-                Object.keys(validationErrors).forEach((k) => {
-                    if (k === "numero_appartement") mapped.numeroAppartement = validationErrors[k][0] || validationErrors[k];
-                    else mapped[k] = validationErrors[k][0] || validationErrors[k];
-                });
-                setErrors(mapped);
-            } else if (resp?.status === 404) {
-                setErrors({ general: "Immeuble non trouvé. Veuillez contacter l'administrateur." });
-            } else if (resp?.data?.error) {
-                setErrors({ general: resp.data.error });
-            } else {
-                setErrors({ general: "Une erreur est survenue. Veuillez réessayer." });
-            }
+            handleApiError(error);
         } finally {
             setIsSubmitting(false);
         }
+    };
 
+    // Extract error handling to separate function for better readability
+    const handleApiError = (error) => {
+        const resp = error?.response;
 
+        if (resp?.status === 422) {
+            // Handle validation errors
+            const validationErrors = resp.data.errors || {};
+            const mapped = {};
+
+            Object.entries(validationErrors).forEach(([key, messages]) => {
+                // Take first message if it's an array, otherwise use as is
+                mapped[key] = Array.isArray(messages) ? messages[0] : messages;
+            });
+
+            setErrors(mapped);
+        } else if (resp?.status === 404) {
+            setErrors({ general: "Utilisateur non trouvé." });
+        } else if (resp?.status === 403) {
+            setErrors({ general: "Vous n'êtes pas autorisé à modifier cet utilisateur." });
+        } else if (resp?.data?.error) {
+            setErrors({ general: resp.data.error });
+        } else if (resp?.data?.message) {
+            setErrors({ general: resp.data.message });
+        } else {
+            setErrors({ general: "Une erreur est survenue. Veuillez réessayer." });
+        }
     };
 
     const getFieldError = (fieldName) => {
@@ -255,7 +314,6 @@ export default function Profile() {
                                 className={`block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 ${getFieldError("password") ? "border-red-300 focus:ring-red-200" : "border-gray-200 focus:ring-blue-100"
                                     }`}
                                 disabled={isSubmitting}
-                            // required
                             />
                             <button
                                 type="button"
@@ -325,60 +383,7 @@ export default function Profile() {
                         )}
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label htmlFor="etage" className="block text-sm font-medium text-gray-700 mb-1">
-                                Étage <span className="text-red-500" aria-hidden="true">*</span>
-                            </label>
-                            <input
-                                id="etage"
-                                name="etage"
-                                type="number"
-                                value={form.etage}
-                                onChange={handleChange}
-                                aria-invalid={!!getFieldError("etage")}
-                                aria-describedby={getFieldError("etage") ? "etage-error" : undefined}
-                                min={-10}
-                                className={`block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 ${getFieldError("etage")
-                                    ? "border-red-300 focus:ring-red-200"
-                                    : "border-gray-200 focus:ring-blue-100"
-                                    }`}
-                                disabled={isSubmitting}
-                                required
-                            />
-                            {getFieldError("etage") && (
-                                <p id="etage-error" className="mt-1 text-sm text-red-600">
-                                    {getFieldError("etage")}
-                                </p>
-                            )}
-                        </div>
 
-                        <div>
-                            <label htmlFor="numeroAppartement" className="block text-sm font-medium text-gray-700 mb-1">
-                                Numéro d'appartement <span className="text-red-500" aria-hidden="true">*</span>
-                            </label>
-                            <input
-                                id="numeroAppartement"
-                                name="numeroAppartement"
-                                type="text"
-                                value={form.numeroAppartement}
-                                onChange={handleChange}
-                                aria-invalid={!!getFieldError("numeroAppartement")}
-                                aria-describedby={getFieldError("numeroAppartement") ? "numeroAppartement-error" : undefined}
-                                className={`block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 ${getFieldError("numeroAppartement")
-                                    ? "border-red-300 focus:ring-red-200"
-                                    : "border-gray-200 focus:ring-blue-100"
-                                    }`}
-                                disabled={isSubmitting}
-                                required
-                            />
-                            {getFieldError("numeroAppartement") && (
-                                <p id="numeroAppartement-error" className="mt-1 text-sm text-red-600">
-                                    {getFieldError("numeroAppartement")}
-                                </p>
-                            )}
-                        </div>
-                    </div>
                 </div>
 
                 <div className="mt-6">

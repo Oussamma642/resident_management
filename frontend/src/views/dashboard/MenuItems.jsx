@@ -18,9 +18,6 @@ function MenuItems({ sidebarOpen, setSidebarOpen }) {
     const [openDropdowns, setOpenDropdowns] = useState({});
     const { user } = useStateContext();
 
-    useEffect(() => {
-        console.log(user)
-    }, [user]);
 
     const sidebarItems = [
         {
@@ -163,6 +160,8 @@ function MenuItems({ sidebarOpen, setSidebarOpen }) {
                         `absolute bottom-0 left-0 right-0 p-4 px-1 border-t border-gray-100 bg-gradient-to-t from-gray-50 to-transparent ${isActive ? 'bg-gradient-to-t from-indigo-50 to-transparent' : ''
                         }`
                     }
+                    onClick={() => setSidebarOpen(false)}
+
                 >
                     {({ isActive }) => (
                         <div className={`flex items-center space-x-3 p-3 rounded-xl shadow-sm border transition-all duration-200 ${isActive
