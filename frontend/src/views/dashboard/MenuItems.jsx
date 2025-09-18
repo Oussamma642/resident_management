@@ -15,6 +15,9 @@ import {
 } from "lucide-react";
 
 function MenuItems({ sidebarOpen, setSidebarOpen }) {
+
+    const [searchTerm, setSearchTerm] = useState("");
+
     const [openDropdowns, setOpenDropdowns] = useState({});
     const { user } = useStateContext();
 
@@ -40,14 +43,6 @@ function MenuItems({ sidebarOpen, setSidebarOpen }) {
             hasDropdown: false,
             badge: "12",
         },
-
-        // {
-        //     icon: HelpCircle,
-        //     label: "Guide",
-        //     to: "/guide",
-        //     hasDropdown: false,
-        //     badge: null,
-        // }
     ];
 
     const toggleDropdown = (key) => {
@@ -91,7 +86,9 @@ function MenuItems({ sidebarOpen, setSidebarOpen }) {
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                         <input
                             type="text"
-                            placeholder="Search menu..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            placeholder="Rechercher sur le menu..."
                             className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                         />
                     </div>

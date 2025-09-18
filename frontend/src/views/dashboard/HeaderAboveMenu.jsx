@@ -18,7 +18,7 @@ function HeaderAboveMenu() {
                         <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-2 border-white"></div>
                     </div>
                     <div>
-                        <h2 className="text-lg font-bold text-gray-900 tracking-tight">Dashboard</h2>
+                        <h2 className="text-lg font-bold text-gray-900 tracking-tight">Resident</h2>
                         <p className="text-sm text-gray-500">Management System</p>
                     </div>
                 </div>
