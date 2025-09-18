@@ -1,4 +1,3 @@
-
 // Dashboard.js
 import React, { useState } from "react";
 import Header from "./Header";
@@ -11,14 +10,17 @@ const Dashboard = () => {
     const { user } = useStateContext();
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100 flex">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100">
             <MenuItems
                 sidebarOpen={sidebarOpen}
                 setSidebarOpen={setSidebarOpen}
             />
-            <div className="flex-1 flex flex-col w-full lg:w-auto">
+            {/* Main content area with left margin to account for fixed sidebar */}
+            <div className="lg:ml-72 flex flex-col min-h-screen">
                 <Header setSidebarOpen={setSidebarOpen} />
-                <Outlet />
+                <main className="flex-1 pt-20">
+                    <Outlet />
+                </main>
             </div>
         </div>
     );

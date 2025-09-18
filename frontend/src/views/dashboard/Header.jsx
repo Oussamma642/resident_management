@@ -1,5 +1,3 @@
-
-// Header.js
 import React, { useState } from "react";
 import {
     Sun,
@@ -27,7 +25,7 @@ function Header({ setSidebarOpen }) {
     };
 
     return (
-        <header className="bg-white/80 backdrop-blur-xl border-b border-gray-100 px-4 sm:px-6 lg:px-8 py-4 sticky top-0 z-30">
+        <header className="bg-white/80 backdrop-blur-xl border-b border-gray-100 px-4 sm:px-6 lg:px-8 py-4 fixed top-0 right-0 left-0 lg:left-72 z-30">
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                     <button
@@ -86,4 +84,3 @@ function Header({ setSidebarOpen }) {
 }
 
 export default Header;
-

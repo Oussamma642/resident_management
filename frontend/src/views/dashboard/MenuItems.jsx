@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import HeaderAboveMenu from "./HeaderAboveMenu";
@@ -18,7 +17,6 @@ import {
 function MenuItems({ sidebarOpen, setSidebarOpen }) {
     const [openDropdowns, setOpenDropdowns] = useState({});
     const { user } = useStateContext();
-
 
     const sidebarItems = [
         {
@@ -69,10 +67,10 @@ function MenuItems({ sidebarOpen, setSidebarOpen }) {
                 />
             )}
 
-            {/* Sidebar */}
+            {/* Sidebar - Now always fixed */}
             <div
                 className={`${sidebarOpen ? "translate-x-0" : "-translate-x-full"
-                    } lg:translate-x-0 fixed lg:relative inset-y-0 left-0 z-50 w-72 bg-white/95 backdrop-blur-xl shadow-2xl lg:shadow-xl border-r border-gray-100 transition-all duration-300 ease-out lg:transition-none`}
+                    } lg:translate-x-0 fixed inset-y-0 left-0 z-50 w-72 bg-white/95 backdrop-blur-xl shadow-2xl lg:shadow-xl border-r border-gray-100 transition-all duration-300 ease-out overflow-y-auto`}
             >
                 {/* Close button for mobile */}
                 <div className="lg:hidden absolute top-4 right-4 z-10">
@@ -99,8 +97,8 @@ function MenuItems({ sidebarOpen, setSidebarOpen }) {
                     </div>
                 </div>
 
-                {/* Navigation */}
-            <nav className="p-4 space-y-2">
+                {/* Navigation - with flex-1 to push bottom section down */}
+                <nav className="p-4 space-y-2 flex-1">
                     {sidebarItems.map((item) => {
                         const Icon = item.icon;
 
@@ -160,7 +158,8 @@ function MenuItems({ sidebarOpen, setSidebarOpen }) {
                             </NavLink>
                         );
                     })}
-            </nav>
+                </nav>
+
 
                 {/* Bottom section */}
                 <NavLink
@@ -197,10 +196,10 @@ function MenuItems({ sidebarOpen, setSidebarOpen }) {
                     )}
                 </NavLink>
 
+
             </div>
         </>
     );
 }
 
 export default MenuItems;
-
