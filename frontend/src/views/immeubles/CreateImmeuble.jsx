@@ -1,18 +1,16 @@
 // src/components/ImmeubleCheck.jsx
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosClient from "../../axios-client";
 import { useStateContext } from "../../contexts/ContextProvider";
 
 const CreateImmeuble = () => {
     const navigate = useNavigate();
-    const { token } = useStateContext();
     const [formData, setFormData] = useState({
         name: "",
         address: "",
     });
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
 
 

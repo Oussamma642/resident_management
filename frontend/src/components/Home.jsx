@@ -1,7 +1,6 @@
 import {
   Building2,
   Users,
-  Badge,
   FileText,
   Calculator,
   Shield,
@@ -12,17 +11,16 @@ import {
   CheckCircle,
   Star,
   ArrowRight,
-  Menu,
 } from "lucide-react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useStateContext } from "../contexts/ContextProvider";
 import { useEffect, useState } from "react";
 
 export default function SyndicateLandingPage() {
 
-  
+
     const {token} = useStateContext();
-    const [destination, setDestination] = useState('/auth/login'); 
+    const [destination, setDestination] = useState('/auth/login');
     const [labelAuth, setLabelAuth] = useState('Connexion');
 
     useEffect(()=>{
@@ -65,7 +63,7 @@ export default function SyndicateLandingPage() {
                 Contact
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></span>
               </a>
-               <Link to={destination}  
+               <Link to={destination}
                className="text-slate-600 hover:text-blue-600 transition-all duration-300 relative group"
               >
                 {labelAuth}

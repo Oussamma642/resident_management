@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import HeaderAboveMenu from "./HeaderAboveMenu";
 import { useStateContext } from "../../contexts/ContextProvider";
 
 import {
-    HelpCircle,
     ChevronDown,
     Search,
     Home,

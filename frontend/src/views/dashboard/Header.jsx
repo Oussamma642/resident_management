@@ -1,12 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
-    Sun,
-    Moon,
     Bell,
     BookOpen,
     Menu,
     LogOut,
-    X
 } from "lucide-react";
 import { useStateContext } from "../../contexts/ContextProvider";
 import axiosClient from "../../axios-client";

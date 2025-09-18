@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { Navigate, Outlet, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { useStateContext } from '../contexts/ContextProvider'
 
 function GuestLayout() {

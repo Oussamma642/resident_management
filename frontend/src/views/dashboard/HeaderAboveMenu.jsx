@@ -1,8 +1,5 @@
 
-// HeaderAboveMenu.js
-import React from "react";
 import {
-    Settings,
     Zap
 } from "lucide-react";
 

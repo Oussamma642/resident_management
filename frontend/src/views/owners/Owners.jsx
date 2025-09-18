@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { NavLink } from "react-router-dom";
 import axiosClient from "../../axios-client";
 import {
     Search,
@@ -12,8 +12,6 @@ import {
     Hash,
     Users,
     Filter,
-    MoreVertical,
-    Eye,
     Calendar,
     MapPin
 } from "lucide-react";
