@@ -68,20 +68,39 @@ class ImmeubleController extends Controller
     /**
      * Met à jour un immeuble existant.
      */
-    public function update(Request $request, Immeuble $immeuble)
+    public function update(Request $request, string $id)
     {
+        $authUser = Auth::user();
+
+        if (!$authUser || !$authUser->syndic) {
+            return response()->json(['message' => "Syndic introuvable pour l'utilisateur"], 403);
+        }
+
+        $immeuble = Immeuble::findOrFail($id);
+        $syndicId = (int) $authUser->syndic->id;
+
+        // Comparaison typée pour éviter les surprises
+        if ((int) $immeuble->syndic_id !== $syndicId) {
+            return response()->json(['message' => "Vous n'êtes pas autorisé à modifier cet immeuble"], 403);
+        }
+
+        // Valide seulement les champs modifiables
         $validated = $request->validate([
-            'name' => 'required|string',
+            'immeuble_name' => 'required|string',
             'address' => 'required|string',
         ]);
 
-        $immeuble->update($validated);
+        $immeuble->update([
+            'immeuble_name' => $validated['immeuble_name'],
+            'address' => $validated['address'],
+        ]);
 
         return response()->json([
             'message' => 'Immeuble mis à jour avec succès',
-            'immeuble' => $immeuble,
+            'immeuble' => $immeuble->fresh(),
         ]);
     }
+
 
     /**
      * Supprime un immeuble.

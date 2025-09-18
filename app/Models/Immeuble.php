@@ -8,7 +8,7 @@ class Immeuble extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'address', 'syndic_id'];
+    protected $fillable = ['immeuble_name', 'address', 'syndic_id'];
 
     // ... autres imports ...
     public function syndic()

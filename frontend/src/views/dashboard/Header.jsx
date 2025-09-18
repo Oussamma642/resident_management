@@ -56,11 +56,11 @@ function Header({ setSidebarOpen }) {
 
                     <button className="cursor-pointer relative p-2 hover:bg-gray-100 rounded-xl transition-all duration-200 hover:scale-105">
                         <Bell className="w-5 h-5 text-gray-600" />
-                        {notifications > 0 && (
+                        {/* {notifications > 0 && (
                             <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
                                 {notifications}
                             </span>
-                        )}
+                        )} */}
                     </button>
 
                     <button className="cursor-pointer p-2 hover:bg-gray-100 rounded-xl transition-all duration-200 hidden sm:block hover:scale-105">

@@ -1,30 +1,36 @@
 import { useState, useEffect } from "react";
+import axiosClient from "../../axios-client";
+import { useNavigate } from "react-router-dom";
 
 export default function UpdateImmeuble() {
+
+    const navigate = useNavigate();
+
     const [form, setForm] = useState({
+        id: "",
         immeuble_name: "",
         address: "",
         syndic_id: ""
     });
 
-    // Mock user context
-    const user = { id: 1, name: "Mock User" };
 
-    // Mock loading immeuble data (simulating API call)
     useEffect(() => {
-        // Simulate API response
-        const mockData = {
-            immeuble_name: "Résidence Les Jardins",
-            address: "123 Avenue Mohammed V, Marrakech",
-            syndic_id: "1"
-        };
+        axiosClient
+            .get("/immeubles/auth-syndic")
+            .then(({ data }) => {
+                setForm((f) => ({
+                    ...f,
+                    id: data[0].id || "",
+                    immeuble_name: data[0].immeuble_name || "",
+                    address: data[0].address || "",
+                    syndic_id: data[0].syndic_id || ""
+                }));
+            }).catch((err) => {
+                console.error("Error fetching owner data:", err);
+            });
 
-        // Simulate network delay
-        setTimeout(() => {
-            console.log("Mock data loaded:", mockData);
-            setForm(mockData);
-        }, 500);
     }, []);
+
 
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -68,28 +74,28 @@ export default function UpdateImmeuble() {
         try {
             // Build payload
             const payload = {
+                id: form.id,
                 immeuble_name: form.immeuble_name.trim(),
                 address: form.address.trim(),
                 syndic_id: form.syndic_id
             };
 
-            console.log("Form data to be submitted:", payload);
-
-            // Simulate API call delay
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            const { data } = await axiosClient.put(`/immeubles/${form.id}`, payload);
 
             // Mock successful response
-            setSuccessMessage("Immeuble modifié avec succès !");
+            setSuccessMessage(data.message || "Immeuble modifié avec succès !");
 
-            // Simulate navigation delay
+            // Navigate to dashboard after a delay
             setTimeout(() => {
-                console.log("Would navigate to /dashboard");
-                // Navigation would happen here in real implementation
+                navigate("/dashboard");
             }, 1500);
 
         } catch (error) {
-            console.error("Error:", error);
-            setErrors({ general: "Une erreur est survenue. Veuillez réessayer." });
+            console.error("HTTP status:", error.response?.status);
+            console.error("Server response data:", error.response?.data);
+            setErrors({
+                general: error.response?.data?.message || "Une erreur est survenue. Veuillez réessayer."
+            });
         } finally {
             setIsSubmitting(false);
         }
@@ -100,13 +106,12 @@ export default function UpdateImmeuble() {
     };
 
     const handleReturn = () => {
-        console.log("Would navigate to /dashboard");
-        // Navigation would happen here in real implementation
+        navigate("/dashboard");
     };
 
     return (
         <div className="flex items-start sm:items-center justify-center min-h-screen bg-gray-50 p-4 sm:py-8 py-6 sm:pt-8 pt-16">
-            <div
+            <form
                 onSubmit={handleSubmit}
                 className="bg-white p-6 sm:p-8 rounded-lg shadow-md w-full max-w-lg"
                 aria-labelledby="update-immeuble-title"
@@ -141,8 +146,8 @@ export default function UpdateImmeuble() {
                             aria-invalid={!!getFieldError("immeuble_name")}
                             aria-describedby={getFieldError("immeuble_name") ? "immeuble_name-error" : undefined}
                             className={`block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-0 ${getFieldError("immeuble_name")
-                                    ? "border-red-300 focus:ring-red-200"
-                                    : "border-gray-200 focus:ring-blue-100"
+                                ? "border-red-300 focus:ring-red-200"
+                                : "border-gray-200 focus:ring-blue-100"
                                 }`}
                             disabled={isSubmitting}
                             required
@@ -167,8 +172,8 @@ export default function UpdateImmeuble() {
                             aria-invalid={!!getFieldError("address")}
                             aria-describedby={getFieldError("address") ? "address-error" : undefined}
                             className={`block w-full px-3 py-2 border rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 ${getFieldError("address")
-                                    ? "border-red-300 focus:ring-red-200"
-                                    : "border-gray-200 focus:ring-blue-100"
+                                ? "border-red-300 focus:ring-red-200"
+                                : "border-gray-200 focus:ring-blue-100"
                                 }`}
                             disabled={isSubmitting}
                             required
@@ -186,8 +191,8 @@ export default function UpdateImmeuble() {
                         type="submit"
                         disabled={isSubmitting || !isFormValid()}
                         className={`cursor-pointer w-full inline-flex justify-center items-center gap-2 px-4 py-2 rounded-md text-white font-medium transition ${isSubmitting || !isFormValid()
-                                ? "bg-gray-400 cursor-not-allowed"
-                                : "bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-200"
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : "bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-200"
                             }`}
                         aria-disabled={isSubmitting || !isFormValid()}
                     >
@@ -207,12 +212,12 @@ export default function UpdateImmeuble() {
                     <button
                         type="button"
                         onClick={handleReturn}
-                        className="mt-4 w-full inline-flex justify-center items-center gap-2 px-4 py-2 rounded-md text-white font-medium bg-gray-600 hover:bg-gray-700 focus:ring-2 focus:ring-gray-200 transition"
+                        className="cursor-pointer mt-4 w-full inline-flex justify-center items-center gap-2 px-4 py-2 rounded-md text-white font-medium bg-gray-600 hover:bg-gray-700 focus:ring-2 focus:ring-gray-200 transition"
                     >
                         <span>Retourner</span>
                     </button>
                 </div>
-            </div>
+            </form>
         </div>
     );
 }

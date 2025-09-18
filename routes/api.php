@@ -31,6 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/immeubles', 'index');
             Route::get('/immeubles/auth-syndic', 'getImmeubleOfAuthSyndic');
             Route::post('/immeubles', 'store');
+            Route::put('/immeubles/{id}', 'update');
         });
     });
 

@@ -111,8 +111,6 @@ export default function Profile() {
                 payload.password = form.password.trim();
             }
 
-            console.log("Submitting form data:", payload);
-
             const { data } = await axiosClient.put(`/users/${user.id}`, payload);
 
             setSuccessMessage(data.message || "Utilisateur modifié avec succès !");
